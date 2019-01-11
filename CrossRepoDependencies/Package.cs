@@ -8,8 +8,8 @@ namespace CrossRepoDependencies
     {
         public string Name { get; set; }
 
-        public IEnumerable<Package> referredPackagesInTheSameRepository { get; set; }
+        public IEnumerable<string> ReferredPackagesInTheSameRepository { get; set; }
 
-        public IEnumerable<Package> referredPackagesFromOtherRepositories { get; set; }
+        public IEnumerable<string> ReferredPackagesFromOtherRepositories { get; set; }
     }
 }
