@@ -6,6 +6,8 @@ namespace CrossRepoDependencies
 {
     public class Package
     {
+        public string Solution { get; set; }
+
         public string Name { get; set; }
 
         public IEnumerable<string> ReferredAssembliesInTheSameRepository { get; set; }

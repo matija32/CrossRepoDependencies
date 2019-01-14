@@ -18,23 +18,19 @@ namespace CrossRepoDependencies
             DomainPrefix = domainPrefix;
         }
 
-        public IEnumerable<Repository> Parse()
+        public IEnumerable<Package> Parse()
         {
             var pathsToSolutions = Directory.GetFiles(RootDir, DomainPrefix + @"*.sln", SearchOption.AllDirectories);
-            var repositories = pathsToSolutions.Select(solutionFilename => new Repository()
-            {
-                Name = Path.GetFileNameWithoutExtension(solutionFilename),
-                Projects = FindProjectsFor(solutionFilename)
-            });
-            return repositories;
+            return pathsToSolutions.SelectMany(FindProjectsIn);
         }
 
        
-        private static IEnumerable<Package> FindProjectsFor(string pathToSolution)
+        private static IEnumerable<Package> FindProjectsIn(string pathToSolution)
         {
             var pathsToProjects = Directory.GetFiles(Path.GetDirectoryName(pathToSolution), @"*.csproj", SearchOption.AllDirectories);
             return pathsToProjects.Select(pathToProject => new Package()
             {
+                Solution = Path.GetFileNameWithoutExtension(pathToSolution),
                 Name = Path.GetFileNameWithoutExtension(pathToProject),
                 ReferredAssembliesFromOtherRepositories = GetProjectReferences(pathToProject, "ProjectReference", true),
                 ReferredAssembliesInTheSameRepository = GetProjectReferences(pathToProject, "PackageReference", false)
