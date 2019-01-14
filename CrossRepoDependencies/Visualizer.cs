@@ -23,9 +23,9 @@ namespace CrossRepoDependencies
             _domainPrefix = domainPrefix;
         }
 
-        public void CreateGraph()
+        public DirectedGraph CreateGraph()
         {
-            var builder = new DgmlBuilder(new HubNodeAnalysis())
+            var builder = new DgmlBuilder(new CategoryColorAnalysis())
             {
                 NodeBuilders = new []
                 {
@@ -37,27 +37,14 @@ namespace CrossRepoDependencies
                     new LinksBuilder<Package>(ReferredPackage2Link), 
                 }
             };
-            var graph = builder.Build(_packages);
-            graph.WriteToFile(_graphFilename);
+            return builder.Build(_packages);
         }
 
         private IEnumerable<Link> ReferredPackage2Link(Package package)
         {
-
-            return package.ReferredAssembliesFromOtherRepositories.Select(x => new Link {
-                Source = package.Name,
-                Target = x,
-                Label = "a",
-                Category = "Include"
-            }).Concat(
-                package.ReferredAssembliesInTheSameRepository.Select(x => new Link
-                    {
-                        Source = package.Name,
-                        Target = x,
-                        Label = "a",
-                        Category = "Include"
-                    }
-                ));
+            return package.ReferredAssemblies.Where(x => x.StartsWith(_domainPrefix))
+                .Select(x => new Link { Source = package.Name, Target = x, Category = "References", IsContainment = false})
+                .Append(new Link{ Source = "Solution " + package.Solution, Target = package.Name, Category = "Contains", IsContainment = true});
         }
 
         private Node ExternalAssembly2Node(Package package)
@@ -76,7 +63,8 @@ namespace CrossRepoDependencies
             {
                 Category = "InternalAssembly",
                 Id = package.Name,
-                Label = package.Name
+                Label = package.Name,
+                Description = package.Solution
             };
         }
     }

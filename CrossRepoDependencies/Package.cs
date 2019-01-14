@@ -10,8 +10,6 @@ namespace CrossRepoDependencies
 
         public string Name { get; set; }
 
-        public IEnumerable<string> ReferredAssembliesInTheSameRepository { get; set; }
-
-        public IEnumerable<string> ReferredAssembliesFromOtherRepositories { get; set; }
+        public IEnumerable<string> ReferredAssemblies { get; set; }
     }
 }

@@ -32,8 +32,9 @@ namespace CrossRepoDependencies
             {
                 Solution = Path.GetFileNameWithoutExtension(pathToSolution),
                 Name = Path.GetFileNameWithoutExtension(pathToProject),
-                ReferredAssembliesFromOtherRepositories = GetProjectReferences(pathToProject, "ProjectReference", true),
-                ReferredAssembliesInTheSameRepository = GetProjectReferences(pathToProject, "PackageReference", false)
+                ReferredAssemblies = 
+                    GetProjectReferences(pathToProject, "ProjectReference", true).Concat(
+                    GetProjectReferences(pathToProject, "PackageReference", false))
             });
         }
 
