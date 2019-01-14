@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CrossRepoDependencies
 {
-    class Repository
+    public class Repository
     {
         public string Name { get; set; }
         public IEnumerable<Package> Projects { get; set; }
